@@ -23,5 +23,10 @@
   "bugs": {
     "url": "https://github.com/jdiehl99/Tame-Your-Job-Search/issues"
   },
-  "homepage": "https://github.com/jdiehl99/Tame-Your-Job-Search#readme"
+  "homepage": "https://github.com/jdiehl99/Tame-Your-Job-Search#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "mongo": "^0.1.0",
+    "mongoose": "^4.13.0"
+  }
 }

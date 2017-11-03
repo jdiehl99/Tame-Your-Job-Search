@@ -1,3 +1,8 @@
+notes.md
+samplecode.js
+.vscode
+.DS_Store
+
 # Logs
 logs
 *.log

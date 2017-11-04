@@ -10,7 +10,7 @@ const passport = require('passport');
 const flash    = require('connect-flash');
 
 const app = express();
-const PORT = process.env.PORT || 4100;
+// const PORT = process.env.PORT || 4100;
 
 require('./config/passport')(passport); // pass passport for configuration
 
@@ -37,6 +37,6 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 require('./public/js/jobs.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 
-app.listen(PORT, function() {
+app.listen(process.env.PORT || 3000, function(){
     console.log("app listening on PORT " + PORT);
 });

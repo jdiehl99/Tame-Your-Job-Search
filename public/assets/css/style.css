@@ -1,3 +1,39 @@
+* {
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 768px) {
+    /* For mobile phones: */
+    [class*="col-"] {
+        width: 100%;
+    }
+    table {
+        width:95%;
+    }
+    input[type=text] {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    [class*="col-"] {
+        width: 100%;
+    }
+    table {
+        width:95%;
+    }
+    input[type=text] {
+        width: 100%;
+    }
+}
+
+@media print {
+    body {
+        background-color: #fff;
+        background-image: hide;
+    }
+}
+
 #mainBody{
     width: 70%;
     margin: 0 auto;
@@ -15,3 +51,6 @@ th {
 nav li a {
     color: #f16633;
   }
+label {
+    padding: 20px 0px 0px 0px;
+}

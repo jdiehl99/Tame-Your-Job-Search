@@ -6,7 +6,7 @@ const mysql = require("mysql");
 const app = express();
 var connection = require("./../../config/connection.js");
 
-function showPage(app, __dirname) {
+module.exports = function (app, passport) {
 
     // Show index page
     app
@@ -15,47 +15,121 @@ function showPage(app, __dirname) {
         });
 
     // Get list of job from db and send to dashboard template
-    app.get("/dashboard", function (req, res) {
-        connection
-            .query("SELECT * FROM jobs;", function (err, data) {
-                if (err) {
-                    throw err;
-                }
-                res.render("dashboard", {jobs: data});
-            });
+    app.get("/dashboard", isLoggedIn, function (req, res) {
+        // get id of current user and display their jobs
+        var uid = req.user.id;
+        connection.query("SELECT * FROM jobs where userID = " + uid + ";", function (err, data) {
+            if (err) {
+                throw err;
+            }
+            res.render("dashboard", {jobs: data});
+        });
     });
 
     // show form to add job to DB
-    app.get("/addjob", function (req, res) {
+    app.get("/addjob", isLoggedIn, function (req, res) {
         res.render("addjob");
     });
 
     // Add a new job to the list
-    app.post("/job/new", function (req, res) {
-        // pick a random number from 1-20 to associate with image
+    app.post("/job/new", isLoggedIn, function (req, res) {
+        // get the values from the form
         var job = req.body;
-        // console.log("job from jobs.js line 23", job);
-        console.log("job title",job.jobtitle);
-        connection.query('INSERT INTO jobs (jobtitle,company,contact,phone,email,webpage,source,method) VALUES ("'+job.jobtitle+'","'+job.company+'","'+job.conact+'","'+job.phone+'","'+job.email+'","'+job.webpage+'","'+job.source+'","'+job.method+'")', function (err, result) {     
-            if (err) { console.log(err); }     
+        // grab the id of the current user
+        var uid = req.user.id;
+
+        // insert new job into DB
+        connection.query('INSERT INTO jobs (jobtitle,company,contact,phone,email,webpage,source,method,use' +
+                'rID) VALUES ("' + job.jobtitle + '","' + job.company + '","' + job.conact + '","' + job.phone + '","' + job.email + '","' + job.webpage + '","' + job.source + '","' + job.method + '","' + uid + '")', function (err, result) {
+            if (err) {
+                console.log(err);
+            }
         });
         res.redirect("/dashboard");
     });
 
-        // Get selected job from DB
-        app.get("/job/:id", function (req, res) {
-            var jobid = req.params.id;
-            console.log("jobid",jobid);
+    // Add activity to job listing
+    app.post("/job/activity", isLoggedIn, function (req, res) {
+        console.log("job activity route hit");
+        console.log(req.body);
+        // get the values from the form
+        var act = req.body;
+
+        // // insert new activity into table
+        connection.query('INSERT INTO activity (jobID,activity,activityDate) VALUES ("' + act.jobID + '","' + act.activity + '","' + act.activityDate + '")', function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+        });
+        res.redirect("/job/" + req.body.jobID + "");
+    });
+
+    // Get selected job from DB
+    app.get("/job/:id", isLoggedIn, function (req, res) {
+        // get the job ID from the row that was clicked
+        var jobid = req.params.id;
+        // grab the id of the current user
+        var uid = req.user.id;
+        connection.query("SELECT * FROM jobs where id = " + jobid + " and userID = " + uid + ";", function (err, data) {
+            if (err) {
+                throw err;
+            }
             connection
-                .query("SELECT * FROM jobs where id = "+jobid+";", function (err, data) {
+                .query('SELECT DATE_FORMAT(activityDate, "%m/%d/%Y") as actDate,activity FROM activity where jobID = "' + jobid + '" ORDER BY activityDate;', function (err2, data2) {
                     if (err) {
                         throw err;
                     }
-                    console.log("job data",data);
-                    res.render("detail", {jobs: data});
+                    res.render("detail", {
+                        jobs: data,
+                        activity: data2
+                    });
+
                 });
         });
-    
+    });
 
+    // show the login page
+    app.get('/login', function (req, res) {
+        res.render('login');
+    });
+
+    // process the login form
+    app.post('/login', passport.authenticate('local-login', {
+        successRedirect: '/dashboard', // redirect to the secure profile section
+        failureRedirect: '/login', // redirect back to the signup page if there is an error
+        failureFlash: true // allow flash messages
+    }), function (req, res) {
+        console.log("hello");
+
+        if (req.body.remember) {
+            req.session.cookie.maxAge = 1000 * 60 * 3;
+        } else {
+            req.session.cookie.expires = false;
+        }
+        res.redirect('/');
+    });
+
+    // show the signup form
+    app.get('/signup', function (req, res) {
+        // render the page and pass in any flash data if it exists
+        res.render('signup');
+    });
+
+    // process the signup form
+    app.post('/signup', passport.authenticate('local-signup', {
+        successRedirect: '/dashboard', // redirect to the secure profile section
+        failureRedirect: '/signup', // redirect back to the signup page if there is an error
+        failureFlash: true // allow flash messages
+    }));
+
+    // route middleware to make sure
+    function isLoggedIn(req, res, next) {
+
+        // if user is authenticated in the session, carry on
+        if (req.isAuthenticated()) 
+            return next();
+        
+        // if they aren't redirect them to the home page
+        res.redirect('/');
+    }
 }
-module.exports = showPage;

@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#"><img src="/assets/img/logo.png" class="navlogo" alt="Tame Your Job Search"></a>
+  <a class="navbar-brand" href="/"><img src="/assets/img/logo.png" class="navlogo" alt="Tame Your Job Search"></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -16,25 +16,37 @@
 </nav>
 
 {{#if jobs}}
+<div class="alert alert-success text-center" role="alert">Active Jobs</div>
 <table class="table table-striped">
 <thead>
   <th>Job Title</th>
   <th>Company</th>
-  <th>Contact</th>
-  <th>Email</th>
   <th>Method</th>
 </thead>
-<tbody>
-  {{#each jobs}}
+  {{#each jobs}}{{#if active}}
   <tr onclick="window.location.href='/job/{{id}}'">
     <td>{{jobtitle}}</td>
     <td>{{company}}</td>
-    <td>{{contact}}</td>
-    <td>{{email}}</td>
     <td>{{method}}</td>
   </tr>
-  {{/each}}
-</tbody>
+ {{/if}} {{/each}}
+</table>
+{{#each jobs}}{{#unless active}}
+<div class="alert alert-warning text-center" role="alert">Archived Jobs</div>
+{{/unless}}{{/each}}
+<table class="table table-striped">
+<thead>
+  <th>Job Title</th>
+  <th>Company</th>
+  <th>Method</th>
+</thead>
+  {{#each jobs}}{{#unless active}}
+  <tr onclick="window.location.href='/job/{{id}}'">
+    <td>{{jobtitle}}</td>
+    <td>{{company}}</td>
+    <td>{{method}}</td>
+  </tr>
+  {{/unless}}{{/each}}
 </table>
 {{else}}
 There are no jobs to display

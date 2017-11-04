@@ -2,6 +2,7 @@ notes.md
 samplecode.js
 .vscode
 .DS_Store
+config/database2.js
 
 # Logs
 logs

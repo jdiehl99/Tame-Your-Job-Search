@@ -1,36 +1,34 @@
 {
-  "name": "tame-your-job-search",
+  "name": "pet-a-pug",
   "version": "1.0.0",
-  "description": "App for job seekers to track the status of resume submissions",
+  "description": "Share an awwwww moment with these adorable pugs.  App built using node, express, handelbars, and mySQL.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jdiehl99/Tame-Your-Job-Search.git"
+    "url": "git+https://github.com/jdiehl99/Pet-A-Pug.git"
   },
   "keywords": [
-    "job",
-    "search",
-    "resume",
-    "tracker",
-    "candidate",
-    "application"
+    "pug",
+    "pet",
+    "mysql",
+    "node",
+    "express",
+    "handlebars"
   ],
   "author": "Jodi Diehl",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jdiehl99/Tame-Your-Job-Search/issues"
+    "url": "https://github.com/jdiehl99/Pet-A-Pug/issues"
   },
-  "homepage": "https://github.com/jdiehl99/Tame-Your-Job-Search#readme",
+  "homepage": "https://github.com/jdiehl99/Pet-A-Pug#readme",
   "dependencies": {
-    "axios": "^0.17.0",
     "body-parser": "^1.18.2",
-    "express": "^4.16.2",
-    "mongo": "^0.1.0",
-    "mongoose": "^4.13.0",
-    "passport": "^0.4.0",
+    "express": "^4.16.1",
+    "express-handlebars": "^3.0.0",
+    "mysql": "^2.15.0",
     "path": "^0.12.7"
   }
 }

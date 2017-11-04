@@ -1,0 +1,17 @@
+#mainBody{
+    width: 70%;
+    margin: 0 auto;
+}
+td,th {
+    padding: 6px;
+}
+th {
+    font-weight: bold;
+}
+.navlogo {
+    height: 80px;
+}
+
+nav li a {
+    color: #f16633;
+  }

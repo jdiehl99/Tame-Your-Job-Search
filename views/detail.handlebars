@@ -14,15 +14,17 @@
     </ul>
   </div>
 </nav>
-<h1>Add a Job</h1>
-<form action="/job/new" method="POST">
-    <input type="text" name="jobtitle" size="45" placeholder="Job Title"><br/>
-    <input type="text" name="company" size="45" placeholder="Company"><br/>
-    <input type="text" name="contact" size="45" placeholder="Contact"><br/>
-    <input type="text" name="phone" size="45" placeholder="Phone"><br/>
-    <input type="text" name="email" size="45" placeholder="Email"><br/>
-    <input type="text" name="webpage" size="45" placeholder="webpage"><br/>
-    <input type="text" name="source" size="45" placeholder="source"><br/>
-    <input type="text" name="method" size="45" placeholder="method"><br/>
-    <button type="submit">Submit</button>
-</form><br/>
+<h1>Job Detail</h1>
+{{#each jobs}}
+<table class="table table-striped">
+<tr><td>Job Title</td><td>{{jobtitle}}</td></tr>
+<tr><td>Company</td><td>{{company}}</td></tr>
+<tr><td>Contact</td><td>{{contact}}</td></tr>
+<tr><td>Email</td><td>{{email}}</td></tr>
+<tr><td>Phone</td><td>{{phone}}</td></tr>
+<tr><td>Webpage</td><td>{{webpage}}</td></tr>
+<tr><td>Source</td><td>{{source}}</td></tr>
+<tr><td>Method</td><td>{{method}}</td></tr>
+</tr>
+</table>
+{{/each}}

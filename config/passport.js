@@ -10,6 +10,7 @@ if (process.env.JAWSDB_URL) {
     connection = mysql.createConnection(process.env.JAWSDB_URL);
     connection.query('USE ' + dbconfig.database);
 } else {
+    var dbconfig = require('./database');
     var connection = mysql.createConnection(dbconfig.connection);
     connection.query('USE ' + dbconfig.database);
 }

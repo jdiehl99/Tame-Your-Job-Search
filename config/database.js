@@ -7,3 +7,4 @@ module.exports = {
 	'database': 'jobsearch_db',
     'users_table': 'users'
 };
+   

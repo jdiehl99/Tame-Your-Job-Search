@@ -10,10 +10,12 @@ var dbconfig = require('./database');
 
 if (process.env.JAWSDB_URL) {
     connection = mysql.createConnection(process.env.JAWSDB_URL);
+    connection.query('USE ' + JAWSDB_URL);
   } else {
 var connection = mysql.createConnection(dbconfig.connection);
-  }
 connection.query('USE ' + dbconfig.database);
+  }
+// connection.query('USE ' + dbconfig.database);
 
 // expose this function to our app using module.exports
 module.exports = function(passport) {

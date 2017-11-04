@@ -36,7 +36,6 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // grab the file that has the routes and logic
 require('./public/js/jobs.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-
 app.listen(PORT, function() {
     console.log("app listening on PORT " + PORT);
 });

@@ -14,9 +14,11 @@
                             </p>
                         </div>
                         <div class="top-big-link">
-                            <p>Already have an account?
-                                <a class="btn btn-link-1" href="/login">Login</a>
-                            </p>
+                            <p>Already have an account?</p>
+                            <form action="/login" method="post">
+                                    <input type="text" class="form-small" name="username" placeholder="username"><input type="password" class="form-small" name="password" placeholder="password">
+                                <button type="submit" class="btn btn-link-1">Login</button>
+                            </form>
                         </div>
                     </div>
                     <div class="col-sm-5 form-box">
@@ -30,14 +32,14 @@
                             </div>
                         </div>
                         <div class="form-bottom">
-                            <form role="form" action="/signup" method="post" class="registration-form">
+                            <form action="/signup" method="post">
                                 <div class="form-group">
                                     <label class="sr-only" for="form=username">Username</label>
-                                    <input type="text" name="username" placeholder="username" class="form-username form-control" id="username">
+                                    <input type="text" class="form-control" name="username" placeholder="username">
                                 </div>
                                 <div class="form-group">
                                     <label class="sr-only" for="form-password">Password</label>
-                                    <input type="text" name="form-password" placeholder="password" class="form-password form-control" id="form-password">
+                                    <input type="password" class="form-control" name="password" placeholder="password">
                                 </div>
                                 <button type="submit" class="btn">Sign me up!</button>
                             </form>

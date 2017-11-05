@@ -145,7 +145,6 @@ ul.navbar-nav {
 }
 
 .top-content .text {
-	padding-top: 20px;
 	color: #fff;
 }
 
@@ -165,6 +164,27 @@ ul.navbar-nav {
 
 .top-content .top-big-link {
 	margin-top: 35px;
+}
+
+input[type=text].form-small  {
+		width: 20%;
+		padding: 0 8px;
+		height: 40px;
+}
+input[type=password]  {
+	-moz-border-radius: 6px 6px 0 0; -webkit-border-radius: 6px 6px 0 0; border-radius: 6px 6px 0 0;
+	color: #383838;
+}
+
+input[type=password].form-small  {
+	width: 20%;
+	padding: 0 8px;
+	height: 40px;
+}
+
+input[type=password].form-control  {
+	padding: 0 8px;
+	height: 50px;
 }
 
 .form-top {

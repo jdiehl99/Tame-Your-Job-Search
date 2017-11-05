@@ -1,5 +1,51 @@
-<div class="container text-center">
-    <img src="/assets/img/logo.png" alt="Tame Your Job Search"><br/>
-    <a href="/login"><button type="button" class="btn btn-warning">Login</button></a>
-    <a href="/signup"><button type="button" class="btn btn-warning">Signup</button></a>
+<div class="index-box">
+    <div class="top-content">
+
+        <div class="inner-bg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-7 text">
+                        <img src="assets/img/logo.png" alt="Tame Your Job Search">
+                        <div class="description">
+                            <p>
+                                Would you like to centralize and organize your job search? This app offers you the ability to track your resume submissions
+                                all in one place. Mobile responsive and easy to navigate, you can even update your dashboard
+                                from your phone while on the go.
+                            </p>
+                        </div>
+                        <div class="top-big-link">
+                            <p>Already have an account?
+                                <a class="btn btn-link-1" href="/login">Login</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 form-box">
+                        <div class="form-top">
+                            <div class="form-top-left">
+                                <h3>Sign up now</h3>
+                                <p>Fill in the form below to get instant access:</p>
+                            </div>
+                            <div class="form-top-right">
+                                <i class="fa fa-pencil"></i>
+                            </div>
+                        </div>
+                        <div class="form-bottom">
+                            <form role="form" action="/signup" method="post" class="registration-form">
+                                <div class="form-group">
+                                    <label class="sr-only" for="form=username">Username</label>
+                                    <input type="text" name="username" placeholder="username" class="form-username form-control" id="username">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="form-password">Password</label>
+                                    <input type="text" name="form-password" placeholder="password" class="form-password form-control" id="form-password">
+                                </div>
+                                <button type="submit" class="btn">Sign me up!</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>

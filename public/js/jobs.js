@@ -11,7 +11,7 @@ module.exports = function (app, passport) {
     // Show index page
     app
         .get("/", function (req, res) {
-            res.render("index");
+            res.render("index.ejs", { message: req.flash('loginMessage') });
         });
 
     // Get list of job from db and send to dashboard template
@@ -22,13 +22,15 @@ module.exports = function (app, passport) {
             if (err) {
                 throw err;
             }
-            res.render("dashboard", {jobs: data});
+            res.render("dashboard.ejs", {jobs: data});
         });
     });
 
     // show form to add job to DB
     app.get("/addjob", isLoggedIn, function (req, res) {
-        res.render("addjob");
+        res.render('addjob.ejs', {
+            user : req.user // get the user out of session and pass to template
+        });
     });
 
     // Add a new job to the list
@@ -45,7 +47,7 @@ module.exports = function (app, passport) {
                 console.log(err);
             }
         });
-        res.redirect("/dashboard");
+        res.redirect("/dashboard.ejs");
     });
 
     // Add activity to job listing
@@ -79,7 +81,7 @@ module.exports = function (app, passport) {
                     if (err) {
                         throw err;
                     }
-                    res.render("detail", {
+                    res.render("detail.ejs", {
                         jobs: data,
                         activity: data2
                     });
@@ -89,9 +91,9 @@ module.exports = function (app, passport) {
     });
 
     // show the login page
-    app.get('/login', function (req, res) {
-        res.render('login');
-    });
+    // app.get('/login', function (req, res) {
+    //     res.render('login');
+    // });
 
     // process the login form
     app.post('/login', passport.authenticate('local-login', {
@@ -122,6 +124,14 @@ module.exports = function (app, passport) {
         failureRedirect: '/signup', // redirect back to the signup page if there is an error
         failureFlash: true // allow flash messages
     }));
+
+    // =====================================
+	// LOGOUT ==============================
+	// =====================================
+	app.get('/logout', function(req, res) {
+		req.logout();
+		res.redirect('/');
+	});
 
     // route middleware to make sure
     function isLoggedIn(req, res, next) {

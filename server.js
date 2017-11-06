@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
-const exphbs = require("express-handlebars");
+// const exphbs = require("express-handlebars");
 const mysql = require("mysql");
 const session  = require('express-session');
 const cookieParser = require('cookie-parser');
@@ -10,7 +10,7 @@ const passport = require('passport');
 const flash    = require('connect-flash');
 
 const app = express();
-// const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 require('./config/passport')(passport); // pass passport for configuration
 
@@ -20,8 +20,9 @@ app.use(cookieParser()); // read cookies (needed for auth)
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
-app.set("view engine", "handlebars");
+// app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+// app.set("view engine", "handlebars");
+app.set('view engine', 'ejs'); // set up ejs for templating
 
 // required for passport
 app.use(session({
@@ -36,6 +37,9 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // grab the file that has the routes and logic
 require('./public/js/jobs.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-app.listen(process.env.PORT || 3000, function() {
-    console.log("server is up and running");
+// app.listen(process.env.PORT || 3000, function() {
+//     console.log("server is up and running");
+// });
+app.listen(PORT, function() {
+    console.log("app listening on PORT " + PORT);
 });

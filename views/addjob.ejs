@@ -16,6 +16,7 @@
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -82,7 +83,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#"> Dashboard </a>
+                        <a class="navbar-brand" href="/dashboard"> Dashboard </a>
                     </div>
                     <div class="collapse navbar-collapse">
                         <form class="navbar-form navbar-right" role="search">
@@ -104,6 +105,8 @@
                         <form action="/job/new" method="POST">
                         <label for="jobtitle">Job Title</label><br/>
                             <input type="text" name="jobtitle" placeholder="required"><br/>
+                            <label for="location">Location (City)</label><br/>
+                            <input type="text" name="location"><br/>
                             <label for="company">Company</label><br/>
                             <input type="text" name="company"><br/>
                             <label for="contact">Contact</label><br/>
@@ -117,7 +120,9 @@
                             <label for="source">How did you find this job?</label><br/>
                             <input type="text" name="source"><br/>
                             <label for="method">How did you contact this employer?</label><br/>
-                            <input type="text" name="method"><br/><br/>
+                            <input type="text" name="method"><br/>
+                            <label for="dateSent">Whate date did you submit your resume?</label><br/>
+                            <input type="text" name="dateSent" placeholder="yyyy-mm-dd"><br/><br/>
                             <button type="submit">Add Job</button>
                         </form>
                 </div>

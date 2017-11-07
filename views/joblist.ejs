@@ -16,16 +16,17 @@
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
     <div class="wrapper">
         <div class="sidebar" data-color="blue">
             <!--
-        Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
+Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
 
-        Tip 2: you can also add an image using data-image tag
-    -->
+Tip 2: you can also add an image using data-image tag
+-->
             <div class="logo">
                 <a href="/" class="simple-text">
                     <img src="/assets/img/logo.png" alt="Tame Your Job Search">
@@ -82,7 +83,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#"> Dashboard </a>
+                        <a class="navbar-brand" href="/dashboard"> Dashboard </a>
                     </div>
                     <div class="collapse navbar-collapse">
                         <form class="navbar-form navbar-right" role="search">
@@ -99,103 +100,115 @@
                 </div>
             </nav>
             <div class="content">
-            <div class="container-fluid">
-                <div class="row">
-                <% if (data.length > 0) { %>
-                <!-- if there are jobs, show the active and archived in separate tables -->
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header" data-background-color="blue">
-                                <h4 class="title">Active Jobs</h4>
-                                <p class="category">Positions that are still open and active</p>
+                <div class="container-fluid">
+                    <div class="row">
+                        <% if (data.length > 0) { %>
+                            <!-- if there are jobs, show the active and archived in separate tables -->
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header" data-background-color="blue">
+                                        <h4 class="title">Active Jobs</h4>
+                                        <p class="category">Positions that are still open and active</p>
+                                    </div>
+                                    <div class="card-content table-responsive">
+                                        <table class="table">
+                                            <thead class="text-primary">
+                                                <th>Job Title</th>
+                                                <th>Company</th>
+                                                <th>Method</th>
+                                                <th>Status</th>
+                                            </thead>
+                                            <tbody>
+                                                <% for(var i=0; i<data.length; i++) {%>
+                                                    <% if (data[i].active === 1) {%>
+                                                        <tr>
+                                                            <td>
+                                                                <a href="/job/<%= data[i].id %>">
+                                                                    <%= data[i].jobtitle %>
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <%= data[i].company %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data[i].method %>
+                                                            </td>
+
+                                                            <td>
+                                                                <%= data[i].status %>
+                                                            </td>
+                                                        </tr>
+                                                        <% } %>
+                                                            <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-content table-responsive">
-                                <table class="table">
-                                    <thead class="text-primary">
-                                        <th>Job Title</th>
-                                        <th>Company</th>
-                                        <th>Method</th>
-                                        <!-- <th>Status</th> -->
-                                    </thead>
-                                    <tbody>
-                                            <% for(var i=0; i<data.length; i++) {%>
-                                                <% if (data[i].active === 1) {%>
-                                                <tr>
-                                                    <td>
-                                                        <a href="/job/<%= data[i].id %>"><%= data[i].jobtitle %></a>
-                                                    </td>
-                                                    <td>
-                                                        <%= data[i].company %>
-                                                    </td>
-                                                    <td>
-                                                        <%= data[i].method %>
-                                                    </td>
-                                                    <!-- <td><%= data[i].status %></td> -->
-                                                    </tr>
-                                                    <% } %>
-                                            <% } %>
-                                    </tbody>
-                                </table>
+                            <div class="col-md-12">
+                                <div class="card card-plain">
+                                    <div class="card-header" data-background-color="blue">
+                                        <h4 class="title">Archvived Jobs</h4>
+                                        <p class="category">Jobs that have been closed or declined</p>
+                                    </div>
+                                    <div class="card-content table-responsive">
+                                        <table class="table">
+                                            <thead class="text-primary">
+                                                <th>Job Title</th>
+                                                <th>Company</th>
+                                                <th>Method</th>
+                                                <th>Status</th>
+                                            </thead>
+                                            <tbody>
+                                                <% for(var i=0; i<data.length; i++) {%>
+                                                    <% if (data[i].active === 0) {%>
+                                                        <tr>
+                                                            <td>
+                                                                <a href="/job/<%= data[i].id %>">
+                                                                    <%= data[i].jobtitle %>
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <%= data[i].company %>
+                                                            </td>
+                                                            <td>
+                                                                <%= data[i].method %>
+                                                            </td>
+
+                                                            <td>
+                                                                <%= data[i].status %>
+                                                            </td>
+                                                        </tr>
+                                                        <% } %>
+                                                            <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <% } else { %>
+                                <!-- else, there are no jobs - offer user option to add one -->
+                                <div class="col-md-12">
+                                    <p>There are no jobs to display.
+                                        <a href="/addjob">Add one now</a>
+                                    </p>
+                                </div>
+                                <% } %>
                     </div>
-                    <div class="col-md-12">
-                        <div class="card card-plain">
-                            <div class="card-header" data-background-color="blue">
-                                <h4 class="title">Archvived Jobs</h4>
-                                <p class="category">Jobs that have been closed or declined</p>
-                            </div>
-                            <div class="card-content table-responsive">
-                                <table class="table">
-                                    <thead class="text-primary">
-                                        <th>Job Title</th>
-                                        <th>Company</th>
-                                        <th>Method</th>
-                                        <!-- <th>Status</th> -->
-                                    </thead>
-                                    <tbody>
-                                            <% for(var i=0; i<data.length; i++) {%>
-                                                <% if (data[i].active === 0) {%>
-                                                    <tr>
-                                                    <td>
-                                                        <a href="/job/<%= data[i].id %>"><%= data[i].jobtitle %></a>
-                                                    </td>
-                                                    <td>
-                                                        <%= data[i].company %>
-                                                    </td>
-                                                    <td>
-                                                        <%= data[i].method %>
-                                                    </td>
-                                                    <!-- <td><%= data[i].status %></td> -->
-                                                </tr>
-                                                    <% } %>
-                                             <% } %>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <% } else { %>
-                    <!-- else, there are no jobs - offer user option to add one -->
-                    <div class="col-md-12">
-                            <p>There are no jobs to display.  <a href="/addjob">Add one now</a></p>
-                    </div>
-                    <% } %>
                 </div>
             </div>
+            <footer class="footer">
+                <div class="container-fluid">
+                    <p class="copyright pull-right">
+                        &copy;
+                        <script>
+                            document.write(new Date().getFullYear())
+                        </script>
+                        <a href="http://www.creative-tim.com">Creative Tim</a>, made with love for a better web
+                    </p>
+                </div>
+            </footer>
         </div>
-        <footer class="footer">
-            <div class="container-fluid">
-                <p class="copyright pull-right">
-                    &copy;
-                    <script>
-                        document.write(new Date().getFullYear())
-                    </script>
-                    <a href="http://www.creative-tim.com">Creative Tim</a>, made with love for a better web
-                </p>
-            </div>
-        </footer>
-    </div>
     </div>
 </body>
 <!--   Core JS Files   -->
@@ -212,4 +225,5 @@
 <script src="../assets/js/bootstrap-notify.js"></script>
 <!-- Material Dashboard javascript methods -->
 <script src="../assets/js/material-dashboard.js?v=1.2.0"></script>
+
 </html>

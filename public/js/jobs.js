@@ -11,7 +11,9 @@ module.exports = function (app, passport) {
     // Show index page
     app
         .get("/", function (req, res) {
-            res.render("index.ejs", { message: req.flash('loginMessage') });
+            res.render("index.ejs", {
+                message: req.flash('loginMessage')
+            });
         });
 
     // Show user dashboard
@@ -30,7 +32,6 @@ module.exports = function (app, passport) {
     app.get("/joblist", isLoggedIn, function (req, res) {
         // get id of current user and display their jobs
         var uid = req.user.id;
-        console.log("userid",uid);
         connection.query("SELECT * FROM jobs where userID = " + uid + ";", function (err, data) {
             if (err) {
                 throw err;
@@ -42,7 +43,7 @@ module.exports = function (app, passport) {
     // show form to add job to DB
     app.get("/addjob", isLoggedIn, function (req, res) {
         res.render('addjob.ejs', {
-            user : req.user // get the user out of session and pass to template
+            user: req.user // get the user out of session and pass to template
         });
     });
 
@@ -54,34 +55,62 @@ module.exports = function (app, passport) {
         var uid = req.user.id;
 
         // insert new job into DB
-        connection.query('INSERT INTO jobs (jobtitle,company,contact,phone,email,webpage,source,method,use' +
-                'rID) VALUES ("' + job.jobtitle + '","' + job.company + '","' + job.conact + '","' + job.phone + '","' + job.email + '","' + job.webpage + '","' + job.source + '","' + job.method + '","' + uid + '")', function (err, result) {
+        connection.query('INSERT INTO jobs (jobtitle,location,company,contact,phone,email,webpage,source,m' +
+                'ethod,userID,active) VALUES ("' + job.jobtitle + '","' + job.location + '","' + job.company + '","' + job.contact + '","' + job.phone + '","' + job.email + '","' + job.webpage + '","' + job.source + '","' + job.method + '","' + uid + '","1")', function (err, data) {
             if (err) {
                 console.log(err);
             }
+            var jobID = data.insertId;
+            console.log("jobID", data.insertId);
+            connection.query('INSERT INTO activity (activity,activityDate,jobID) VALUES ("Resume Sent","' + job.dateSent + '","' + jobID + '");', function (err2, result2) {
+                if (err2) {
+                    console.log(err2);
+                }
+            });
+            res.redirect("/job/" + jobID + "");
         });
-        res.redirect("/dashboard.ejs");
     });
 
     // Add activity to job listing
     app.post("/job/activity", isLoggedIn, function (req, res) {
-        console.log("job activity route hit");
-        console.log(req.body);
         // get the values from the form
         var act = req.body;
 
         // // insert new activity into table
-        connection.query('INSERT INTO activity (jobID,activity,activityDate) VALUES ("' + act.jobID + '","' + act.activity + '","' + act.activityDate + '")', function (err, result) {
+        connection.query('INSERT INTO activity (jobID,activity,activityDate) VALUES ("' + act.jobID + '","' + act.activity + '","' + act.activityDate + '");', function (err, result) {
             if (err) {
                 console.log(err);
             }
+            // check to see if this is the most recent activity
+            connection
+                .query('SELECT * from activity WHERE jobID = "' + act.jobID + '" ORDER BY activityDate DESC LIMIT 1;', function (err2, result2) {
+                    if (err2) {
+                        console.log(err2);
+                    }
+                    // update job table with new status
+                    connection
+                        .query('UPDATE jobs SET status = "' + result2[0].activity + '" WHERE id = "' + act.jobID + '";', function (err3, result3) {
+                            if (err3) {
+                                console.log(err3);
+                            }
+                            // change active to false if activity is declined or another candidate was
+                            // selected
+                            if (act.activity == "Company Chose Another Candidate" || act.activity == "Declined Offer") {
+                                connection
+                                    .query('UPDATE jobs SET active = "0" WHERE id = "' + act.jobID + '";', function (err4, result4) {
+                                        if (err4) {
+                                            console.log(err4);
+                                        }
+                                    });
+                            }
+                        });
+                });
         });
         res.redirect("/job/" + req.body.jobID + "");
     });
 
     // Get selected job from DB
     app.get("/job/:id", isLoggedIn, function (req, res) {
-        console.log("job id clicked");
         // get the job ID from the row that was clicked
         var jobid = req.params.id;
         // grab the id of the current user
@@ -91,25 +120,22 @@ module.exports = function (app, passport) {
                 throw err;
             }
             connection
-                .query('SELECT DATE_FORMAT(activityDate, "%m/%d/%Y") as actDate,activity FROM activity where jobID = "' + jobid + '" ORDER BY activityDate;', function (err2, data2) {
+                .query('SELECT DATE_FORMAT(activityDate, "%m/%d/%Y") as actDate,activity FROM activity w' +
+                        'here jobID = "' + jobid + '" ORDER BY activityDate;', function (err2, data2) {
                     if (err) {
                         throw err;
                     }
                     res.render("detail.ejs", {
                         data: data,
-                        activity: data2
+                        data2: data2
                     });
 
                 });
         });
     });
 
-    // show the login page
-    // app.get('/login', function (req, res) {
-    //     res.render('login');
-    // });
-
-    // process the login form
+    // show the login page app.get('/login', function (req, res) {
+    // res.render('login'); }); process the login form
     app.post('/login', passport.authenticate('local-login', {
         successRedirect: '/dashboard', // redirect to the secure profile section
         failureRedirect: '/', // redirect back to the signup page if there is an error
@@ -125,13 +151,10 @@ module.exports = function (app, passport) {
         res.redirect('/');
     });
 
-    // show the signup form
-    // app.get('/signup', passport.authenticate('local-signup', {
-    //     successRedirect: '/dashboard', // redirect to the secure profile section
-    //     failureRedirect: '/signup', // redirect back to the signup page if there is an error
-    //     failureFlash: true // allow flash messages
-    // }));
-
+    // show the signup form app.get('/signup', passport.authenticate('local-signup',
+    // {     successRedirect: '/dashboard', // redirect to the secure profile
+    // section     failureRedirect: '/signup', // redirect back to the signup page
+    // if there is an error     failureFlash: true // allow flash messages }));
     // process the signup form
     app.post('/signup', passport.authenticate('local-signup', {
         successRedirect: '/dashboard', // redirect to the secure profile section
@@ -139,13 +162,12 @@ module.exports = function (app, passport) {
         failureFlash: true // allow flash messages
     }));
 
+    // ===================================== LOGOUT ==============================
     // =====================================
-	// LOGOUT ==============================
-	// =====================================
-	app.get('/logout', function(req, res) {
-		req.logout();
-		res.redirect('/');
-	});
+    app.get('/logout', function (req, res) {
+        req.logout();
+        res.redirect('/');
+    });
 
     // route middleware to make sure
     function isLoggedIn(req, res, next) {

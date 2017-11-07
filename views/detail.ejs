@@ -16,6 +16,7 @@
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -82,7 +83,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#"> Dashboard </a>
+                        <a class="navbar-brand" href="/dashboard"> Dashboard </a>
                     </div>
                     <div class="collapse navbar-collapse">
                         <form class="navbar-form navbar-right" role="search">
@@ -100,90 +101,125 @@
             </nav>
             <div class="content">
                 <div class="container-fluid">
-                        <div class="row">
-                                <div class="column col-sm-8">
-                                  <h1>Job Details</h1>
-                                  {{#each jobs}}
-                                  <table class="table table-striped">
+                    <div class="row">
+                        <div class="column col-sm-8">
+                            <% for(var i=0; i<data.length; i++) {%>
+                                <h2>
+                                    <%= data[i].jobtitle %>
+                                </h2>
+                                <table class="table table-striped">
                                     <tr>
-                                      <td>Job Title</td>
-                                      <td>{{jobtitle}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Company</td>
-                                      <td>{{company}}</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Contact</td>
-                                      <td>{{contact}}</td>
+                                        <th scope="row">Location</th>
+                                        <td>
+                                            <%= data[i].location %>
+                                        </td>
                                     </tr>
                                     <tr>
-                                      <td>Email</td>
-                                      <td>{{email}}</td>
+                                        <th scope="row">Company</th>
+                                        <td>
+                                            <%= data[i].company %>
+                                        </td>
                                     </tr>
                                     <tr>
-                                      <td>Phone</td>
-                                      <td>{{phone}}</td>
+                                        <th scope="row">Contact</th>
+                                        <td>
+                                            <%= data[i].contact%>
+                                        </td>
                                     </tr>
                                     <tr>
-                                      <td>Webpage</td>
-                                      <td>{{webpage}}</td>
+                                        <th scope="row">Email</th>
+                                        <td>
+                                            <%= data[i].email %>
+                                        </td>
                                     </tr>
                                     <tr>
-                                      <td>Source</td>
-                                      <td>{{source}}</td>
+                                        <th scope="row">Phone</th>
+                                        <td>
+                                            <%= data[i].phone %>
+                                        </td>
                                     </tr>
                                     <tr>
-                                      <td>Method</td>
-                                      <td>{{method}}</td>
+                                        <th scope="row">Webpage</th>
+                                        <td>
+                                            <a href="<%= data[i].webpage %>" target="_blank">
+                                                <%= data[i].webpage %>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Source</th>
+                                        <td>
+                                            <%= data[i].source %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Method</th>
+                                        <td>
+                                            <%= data[i].method %>
+                                        </td>
                                     </tr>
                                     </tr>
-                                  </table>
-                                      {{/each}}
-                                </div>
-                                <div class="column col-sm-4 actadd">
-                                  <h2> &nbsp;</h2>
-                                  {{#each jobs}}
-                                  <form action="/job/activity" method="POST">
-                                    <label for="activityDate">Date of Action:</label>
-                                    <br/>
-                                    <input type="text" name="activityDate" placeholder="yyyy-mm-dd">
-                                    <br/>
-                                    <br/>
-                                    <label for="activityDate">Choose an Activity:</label>
-                                    <br/>
-                                    <select name="activity">
-                                      <option selected> </option>
-                                      <option>Resume Sent</option>
-                                      <option>Request to Interview Received</option>
-                                      <option>Interview Scheduled</option>
-                                      <option>Intervew Completed</option>
-                                      <option>Request for 2nd Interview Received</option>
-                                      <option>2nd Interview Scheduled</option>
-                                      <option>2nd Interview Completed</option>
-                                      <option>Offer Received</option>
-                                      <option>Company Chose Another Candidate</option>
-                                      <option>Declined Offer</option>
-                                    </select>
-                                    <br/>
-                                    <input type="hidden" name="jobID" value="{{id}}">
+                                </table>
+                                <% } %>
+                        </div>
+                        <div class="column col-sm-4 actadd">
+                            <h2>Add Activity</h2>
+                            <form action="/job/activity" method="POST">
+                                <label for="activityDate">Date of Action:</label>
+                                <br/>
+                                <input type="text" name="activityDate" placeholder="yyyy-mm-dd">
+                                <br/>
+                                <br/>
+                                <label for="activityDate">Choose an Activity:</label>
+                                <br/>
+                                <select name="activity">
+                                    <option selected> </option>
+                                    <option>Resume Sent</option>
+                                    <option>Request to Interview Received</option>
+                                    <option>Interview Scheduled</option>
+                                    <option>Intervew Completed</option>
+                                    <option>Request for 2nd Interview Received</option>
+                                    <option>2nd Interview Scheduled</option>
+                                    <option>2nd Interview Completed</option>
+                                    <option>Offer Received</option>
+                                    <option>Company Chose Another Candidate</option>
+                                    <option>Declined Offer</option>
+                                </select>
+                                <br/>
+                                <% for(var i=0; i<1; i++) {%>
+                                    <input type="hidden" name="jobID" value="<%= data[i].id %>">
                                     <button type="submit">Add Activity</button>
-                                  </form>
-                                  {{/each}} {{#if activity}}
-                                  <hr/>
-                                  <h2>Recent Activity</h2>
-                                  {{#each activity}}
-                                  <div class="row">
+                                    <% } %>
+                            </form>
+                            <hr/>
+                            <h2>History</h2>
+                            <% if (data2.length > 0) {%>
+                                <table class="table table-striped">
+                                    <% for(var j=0; j<data2.length; j++) {%>
+                                        <tr>
+                                            <th scope="row">
+                                                <%= data2[j].actDate %>
+                                            </th>
+                                            <td>
+                                                <%= data2[j].activity %>
+                                            </td>
+                                        </tr>
+                                        <!-- <div class="row">
                                     <div class="col">
-                                      {{actDate}}
+                                            <%= data2[j].actDate %>
                                     </div>
                                     <div class="col">
-                                      {{activity}}
+                                            <%= data2[j].activity %>
                                     </div>
-                                  </div><hr/>
-                                  {{/each}} {{/if}}
-                                </div>
-                              </div>
+                                  </div> -->
+                                        <% } %>
+                                </table>
+                                <hr/>
+                                <% } else { %>
+                                    <p>No recent activity to display.</p>
+                                    <% } %>
+                        </div>
+                    </div>
                 </div>
             </div>
             <footer class="footer">

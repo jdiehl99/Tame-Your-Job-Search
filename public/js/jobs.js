@@ -14,7 +14,7 @@ module.exports = function (app, passport) {
             res.render("index.ejs", { message: req.flash('loginMessage') });
         });
 
-    // Get list of job from db and send to dashboard template
+    // Show user dashboard
     app.get("/dashboard", isLoggedIn, function (req, res) {
         // get id of current user and display their jobs
         var uid = req.user.id;
@@ -22,7 +22,20 @@ module.exports = function (app, passport) {
             if (err) {
                 throw err;
             }
-            res.render("dashboard.ejs", {jobs: data});
+            res.render("dashboard.ejs", {data: data});
+        });
+    });
+
+    // Get list of job from db and send to dashboard template
+    app.get("/joblist", isLoggedIn, function (req, res) {
+        // get id of current user and display their jobs
+        var uid = req.user.id;
+        console.log("userid",uid);
+        connection.query("SELECT * FROM jobs where userID = " + uid + ";", function (err, data) {
+            if (err) {
+                throw err;
+            }
+            res.render("joblist.ejs", {data: data});
         });
     });
 
@@ -68,6 +81,7 @@ module.exports = function (app, passport) {
 
     // Get selected job from DB
     app.get("/job/:id", isLoggedIn, function (req, res) {
+        console.log("job id clicked");
         // get the job ID from the row that was clicked
         var jobid = req.params.id;
         // grab the id of the current user
@@ -82,7 +96,7 @@ module.exports = function (app, passport) {
                         throw err;
                     }
                     res.render("detail.ejs", {
-                        jobs: data,
+                        data: data,
                         activity: data2
                     });
 
@@ -98,7 +112,7 @@ module.exports = function (app, passport) {
     // process the login form
     app.post('/login', passport.authenticate('local-login', {
         successRedirect: '/dashboard', // redirect to the secure profile section
-        failureRedirect: '/login', // redirect back to the signup page if there is an error
+        failureRedirect: '/', // redirect back to the signup page if there is an error
         failureFlash: true // allow flash messages
     }), function (req, res) {
         console.log("hello");
@@ -121,7 +135,7 @@ module.exports = function (app, passport) {
     // process the signup form
     app.post('/signup', passport.authenticate('local-signup', {
         successRedirect: '/dashboard', // redirect to the secure profile section
-        failureRedirect: '/signup', // redirect back to the signup page if there is an error
+        failureRedirect: '/', // redirect back to the signup page if there is an error
         failureFlash: true // allow flash messages
     }));
 

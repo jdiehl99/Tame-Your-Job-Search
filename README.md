@@ -1,4 +1,4 @@
-# Tame-Your-Job-Search
+# Tame Your Job Search
 
 Would you like to centralize and organize your job search? This app offers you the ability to track your resume submissions all in one place. Mobile responsive and easy to navigate, you can even update your dashboard from your phone while on the go.
 

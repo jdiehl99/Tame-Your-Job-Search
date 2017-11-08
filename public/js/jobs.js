@@ -163,6 +163,41 @@ module.exports = function (app, passport) {
         });
     });
 
+
+    // Delete the job from the table
+    app.get("/deljob/:id", isLoggedIn, function (req, res) {
+        // get id of current user and display their jobs
+        var job = req.params;
+        console.log("req params", req.params);
+        connection.query("DELETE FROM jobs where id = " + job.jobID + ";", function (err, data) {
+            if (err) {
+                throw err;
+            }
+            connection.query("DELETE FROM activity where jobID = " + job.jobID + ";", function (err2, data2) {
+                if (err2) {
+                    throw err2;
+                }
+                res.redirect("/joblist");
+            });
+        });
+    });
+
+    // Search by job title, contact, and company
+    app.post("/search", isLoggedIn, function (req, res) {
+        // get id of current user and display their jobs
+        var uid = req.user.id;
+        var s = req.body;
+        console.log("s", s);
+        connection.query('SELECT * FROM jobs WHERE (jobtitle LIKE "%' + s.criteria + '%" OR company LIKE "%' + s.criteria + '%" OR contact LIKE "%' + s.criteria + '%") AND (userID = "' + uid + '");', function (err, data) {
+            if (err) {
+                throw err;
+            }
+            res.render("search.ejs", {
+                data: data
+            });
+        });
+    });
+
     // show the login page app.get('/login', function (req, res) {
     // res.render('login'); }); process the login form
     app.post('/login', passport.authenticate('local-login', {

@@ -34,13 +34,13 @@
             </div>
             <div class="sidebar-wrapper">
                 <ul class="nav">
-                    <li class="active">
+                    <li>
                         <a href="/dashboard">
                             <i class="material-icons">dashboard</i>
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <li>
+                    <li class="active">
                         <a href="/joblist">
                             <i class="material-icons">content_paste</i>
                             <p>Job List</p>
@@ -52,7 +52,7 @@
                             <p>Add Job</p>
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="./icons.html">
                             <i class="material-icons">bubble_chart</i>
                             <p>Icons</p>
@@ -63,7 +63,7 @@
                             <i class="material-icons text-gray">notifications</i>
                             <p>Notifications</p>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="active-pro">
                         <a href="/logout">
                             <i class="material-icons">unarchive</i>
@@ -188,6 +188,7 @@
                                 <br/>
                                 <% for(var i=0; i<1; i++) {%>
                                     <input type="hidden" name="jobID" value="<%= data[i].id %>">
+                                    <input type="hidden" name="userID" value="<%= data[i].userID %>">
                                     <button type="submit">Add Activity</button>
                                     <% } %>
                             </form>

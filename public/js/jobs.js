@@ -18,13 +18,39 @@ module.exports = function (app, passport) {
 
     // Show user dashboard
     app.get("/dashboard", isLoggedIn, function (req, res) {
-        // get id of current user and display their jobs
+        // get id of current user and display stats
         var uid = req.user.id;
-        connection.query("SELECT * FROM jobs where userID = " + uid + ";", function (err, data) {
+        connection.query("SELECT COUNT(id) as totaljobs FROM jobs where userID = '" + uid + "';", function (err, data) {
             if (err) {
                 throw err;
             }
-            res.render("dashboard.ejs", {data: data});
+            connection.query('SELECT COUNT(id) as setinterviews FROM activity where userID = "' + uid + '" and activity LIKE "%Interview Scheduled";', function (err2, data2) {
+                if (err2) {
+                    throw err2;
+                }
+                connection.query('SELECT COUNT(id) as totalinterviews FROM activity where userID = "' + uid + '" and activity LIKE "%Intervew Completed";', function (err3, data3) {
+                    if (err3) {
+                        throw err3;
+                    }
+                    connection.query('SELECT COUNT(id) as totaloffers FROM activity where userID = "' + uid + '" and activity = "Offer Received";', function (err4, data4) {
+                        if (err4) {
+                            throw err4;
+                        }
+                        connection.query('SELECT * FROM activity as a LEFT JOIN jobs as j ON a.jobID = j.id WHERE j.userID = "' + uid + '" ORDER BY a.activityDate DESC LIMIT 10;', function (err5, data5) {
+                            if (err5) {
+                                throw err5;
+                            }
+                            res.render("dashboard.ejs", {
+                                data: data,
+                                data2: data2,
+                                data3: data3,
+                                data4: data4,
+                                data5: data5
+                            });
+                        });
+                    });
+                });
+            });
         });
     });
 
@@ -36,7 +62,9 @@ module.exports = function (app, passport) {
             if (err) {
                 throw err;
             }
-            res.render("joblist.ejs", {data: data});
+            res.render("joblist.ejs", {
+                data: data
+            });
         });
     });
 
@@ -56,19 +84,20 @@ module.exports = function (app, passport) {
 
         // insert new job into DB
         connection.query('INSERT INTO jobs (jobtitle,location,company,contact,phone,email,webpage,source,m' +
-                'ethod,userID,active) VALUES ("' + job.jobtitle + '","' + job.location + '","' + job.company + '","' + job.contact + '","' + job.phone + '","' + job.email + '","' + job.webpage + '","' + job.source + '","' + job.method + '","' + uid + '","1")', function (err, data) {
-            if (err) {
-                console.log(err);
-            }
-            var jobID = data.insertId;
-            console.log("jobID", data.insertId);
-            connection.query('INSERT INTO activity (activity,activityDate,jobID) VALUES ("Resume Sent","' + job.dateSent + '","' + jobID + '");', function (err2, result2) {
-                if (err2) {
-                    console.log(err2);
+            'ethod,userID,active) VALUES ("' + job.jobtitle + '","' + job.location + '","' + job.company + '","' + job.contact + '","' + job.phone + '","' + job.email + '","' + job.webpage + '","' + job.source + '","' + job.method + '","' + uid + '","1")',
+            function (err, data) {
+                if (err) {
+                    console.log(err);
                 }
+                var jobID = data.insertId;
+                console.log("jobID", data.insertId);
+                connection.query('INSERT INTO activity (activity,activityDate,jobID) VALUES ("Resume Sent","' + job.dateSent + '","' + jobID + '");', function (err2, result2) {
+                    if (err2) {
+                        console.log(err2);
+                    }
+                });
+                res.redirect("/job/" + jobID + "");
             });
-            res.redirect("/job/" + jobID + "");
-        });
     });
 
     // Add activity to job listing
@@ -77,7 +106,7 @@ module.exports = function (app, passport) {
         var act = req.body;
 
         // // insert new activity into table
-        connection.query('INSERT INTO activity (jobID,activity,activityDate) VALUES ("' + act.jobID + '","' + act.activity + '","' + act.activityDate + '");', function (err, result) {
+        connection.query('INSERT INTO activity (jobID,activity,activityDate,userID) VALUES ("' + act.jobID + '","' + act.activity + '","' + act.activityDate + '","' + act.userID + '");', function (err, result) {
             if (err) {
                 console.log(err);
             }
@@ -121,16 +150,17 @@ module.exports = function (app, passport) {
             }
             connection
                 .query('SELECT DATE_FORMAT(activityDate, "%m/%d/%Y") as actDate,activity FROM activity w' +
-                        'here jobID = "' + jobid + '" ORDER BY activityDate;', function (err2, data2) {
-                    if (err) {
-                        throw err;
-                    }
-                    res.render("detail.ejs", {
-                        data: data,
-                        data2: data2
-                    });
+                    'here jobID = "' + jobid + '" ORDER BY activityDate;',
+                    function (err2, data2) {
+                        if (err) {
+                            throw err;
+                        }
+                        res.render("detail.ejs", {
+                            data: data,
+                            data2: data2
+                        });
 
-                });
+                    });
         });
     });
 
@@ -173,9 +203,9 @@ module.exports = function (app, passport) {
     function isLoggedIn(req, res, next) {
 
         // if user is authenticated in the session, carry on
-        if (req.isAuthenticated()) 
+        if (req.isAuthenticated())
             return next();
-        
+
         // if they aren't redirect them to the home page
         res.redirect('/');
     }

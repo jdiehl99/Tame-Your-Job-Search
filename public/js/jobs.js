@@ -2,7 +2,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const mysql = require("mysql");
-
 const app = express();
 var connection = require("./../../config/connection.js");
 
@@ -36,7 +35,7 @@ module.exports = function (app, passport) {
                         if (err4) {
                             throw err4;
                         }
-                        connection.query('SELECT * FROM activity as a LEFT JOIN jobs as j ON a.jobID = j.id WHERE j.userID = "' + uid + '" ORDER BY a.activityDate DESC LIMIT 10;', function (err5, data5) {
+                        connection.query('SELECT * FROM activity as a LEFT JOIN jobs as j ON a.jobID = j.id WHERE j.userID = "' + uid + '" AND j.active = "1" ORDER BY a.activityDate DESC LIMIT 10;', function (err5, data5) {
                             if (err5) {
                                 throw err5;
                             }

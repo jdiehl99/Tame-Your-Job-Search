@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
-// const exphbs = require("express-handlebars");
 const mysql = require("mysql");
 const session  = require('express-session');
 const cookieParser = require('cookie-parser');

@@ -12,4 +12,4 @@ Bugs will be squashed as quickly as possible.
 
 # Further support
 
-Should you need additional support, feel free to contact me at email@jodidiehl.com(mailto:email@jodidiehl.com).
+Should you need additional support, feel free to contact me at email@jodidiehl.com.

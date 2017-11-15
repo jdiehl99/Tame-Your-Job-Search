@@ -198,6 +198,13 @@ module.exports = function (app, passport) {
         });
     });
 
+        // Show help page with link to GitHub issues
+        app.get("/help", isLoggedIn, function (req, res) {
+            // get id of current user and display their jobs
+            var uid = req.user.id;
+                res.render("help.ejs");
+        });
+
     // show the login page app.get('/login', function (req, res) {
     // res.render('login'); }); process the login form
     app.post('/login', passport.authenticate('local-login', {

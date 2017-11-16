@@ -251,7 +251,13 @@ input[type=password].form-control {
 footer {
     position: relative;
     left: 0;
-    bottom: 0;
+	bottom: 0;
+	color: #fff;
+	font-size:12px;
+}
+
+footer a {
+	color: #fff;
 }
 
 .ui-datepicker {
